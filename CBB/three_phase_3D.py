@@ -26,7 +26,7 @@ class threephase3D(tpv.ThreePhaseVoltage):
         plt.rcParams['mathtext.fontset'] = 'stix'  # 让数学符号也匹配 Times 风格
         
         fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-        plt.subplots_adjust(left=0.02, right=0.98, top=0.98, bottom=0.02)  # cut some white space around the plot
+        plt.subplots_adjust(left=0.05, right=0.95, top=0.98, bottom=0.02)  # cut some white space around the plot
         
         # ===================== axis settings =====================
         ##### set the projection type to orthographic for a more technical look
@@ -49,28 +49,28 @@ class threephase3D(tpv.ThreePhaseVoltage):
         ax.zaxis.line.set_color('#666666')
         
         ##### set view angle for better visibility of the 3D structure
-        ax.view_init(elev=30, azim=-45, roll=0)
+        ax.view_init(elev=30, azim=45, roll=0)
         
         # ===================== colorbar settigns =====================
-        cmap = cm.inferno  # 你可以换成 cm.plasma / cm.inferno / cm.Blues
+        cmap = cm.viridis  # 你可以换成 cm.plasma / cm.inferno / cm.Blues
         combined_data = np.concatenate([self.vzmax3D.ravel(), self.vzmin3D.ravel()])
         vmin, vmax = combined_data.min(), combined_data.max()
         
         # ===================== plot two surfaces =====================
         surf2 = ax.plot_surface(
             self.X, self.Y, self.vzmin3D,
-            cmap=cmap, alpha=0.6, vmin=vmin, vmax=vmax,
-            rstride=5, cstride=5,   # 根据数据密度调整
+            cmap=cmap, alpha=1.0, vmin=vmin, vmax=vmax,
+            rstride=2, cstride=5,   # 根据数据密度调整
             antialiased=True, edgecolor='none'
             )
                 
         surf1 = ax.plot_surface(
             self.X, self.Y, self.vzmax3D,
-            cmap=cmap, alpha=0.6, vmin=vmin, vmax=vmax,
-            rstride=5, cstride=5,   # 根据数据密度调整
+            cmap=cmap, alpha=1.0, vmin=vmin, vmax=vmax,
+            rstride=2, cstride=5,   # 根据数据密度调整
             antialiased=True, edgecolor='none'
             )
-        cbar = fig.colorbar(surf1, ax=ax, shrink=0.5, pad=0.1)
+        cbar = fig.colorbar(surf1, ax=ax, shrink=0.7, pad=0.05)
 
         # ===================== label fonts =====================
         ax.set_xlabel('Angle (rad)', fontweight='bold')
@@ -84,7 +84,6 @@ class threephase3D(tpv.ThreePhaseVoltage):
         ax.set_xticks(xticks)
         ax.set_xticklabels(xtick_labels, fontsize=12, fontweight='bold')
         
-        plt.tight_layout()
         plt.show()
 
 if __name__ == "__main__":
