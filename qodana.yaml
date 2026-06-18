@@ -2,9 +2,5 @@
 #              WARNING: Do not store sensitive information in this file,        #
 #               as its contents will be included in the Qodana report.          #
 #################################################################################
-version: "2.0"
-profile:
-  name: qodana.recommended
-include:
-  - name: CheckDependencyLicenses
-linter: qodana-python
+version: "1.0"
+linter: qodana-python-community
