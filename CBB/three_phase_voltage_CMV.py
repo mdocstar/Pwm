@@ -127,6 +127,16 @@ class ThreePhaseVoltage:
             alpha=0.3,                  # 透明度（避免遮挡曲线）
             label=None             # 图例标签
         )
+        
+        ax.fill_between(
+            self.angle,  # X轴范围
+            self.VPD_max2,          # 下方边界（X轴，y=0）
+            self.VPD_min2,          # 上方边界（曲线y=sin(x)）
+            where=None,  # 指定填充范围：x在2到6之间
+            color="#666666",          # 填充颜色
+            alpha=0.3,                  # 透明度（避免遮挡曲线）
+            label=None             # 图例标签
+        )
                 
         plt.show()
         

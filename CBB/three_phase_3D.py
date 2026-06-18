@@ -60,14 +60,14 @@ class threephase3D(tpv.ThreePhaseVoltage):
         surf2 = ax.plot_surface(
             self.X, self.Y, self.vzmin3D,
             cmap=cmap, alpha=1.0, vmin=vmin, vmax=vmax,
-            rstride=2, cstride=5,   # 根据数据密度调整
+            rstride=1, cstride=1,   # 根据数据密度调整
             antialiased=True, edgecolor='none'
             )
                 
         surf1 = ax.plot_surface(
             self.X, self.Y, self.vzmax3D,
             cmap=cmap, alpha=1.0, vmin=vmin, vmax=vmax,
-            rstride=2, cstride=5,   # 根据数据密度调整
+            rstride=1, cstride=1,   # 根据数据密度调整
             antialiased=True, edgecolor='none'
             )
         cbar = fig.colorbar(surf1, ax=ax, shrink=0.7, pad=0.05)
