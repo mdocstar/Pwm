@@ -3,24 +3,24 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 import tp_voltage as tpv
 
-class threephase3D(tpv.ThreePhaseVoltage):
+class ThreePhase3D(tpv.ThreePhaseVoltage):
     def __init__(self):
-        super().__init__(modulation_index = 0.90)
+        super().__init__(mi=0.90)
         self.Modu3D = np.linspace(0, 2 / np.sqrt(3), int(1e3))
         self.X = np.zeros((len(self.Modu3D), len(self.wt)))
         self.Y = np.zeros((len(self.Modu3D), len(self.wt)))
         self.vzmax3D = np.zeros((len(self.Modu3D), len(self.wt)))
         self.vzmin3D = np.zeros((len(self.Modu3D), len(self.wt)))
-    
-    def data3D_Cal(self):
-        for i in range(self.X.shape[0]):
-            self.data_reset(modulation_index = self.Modu3D[i])
-            self.vzmax3D[i,:],self.vzmin3D[i,:] = self.Vzslimit_cal()
-            for j in range(self.X.shape[1]):
-                self.X[i,j] = self.wt[j]
-                self.Y[i,j] = self.Modu3D[i]
 
-    def data3D_plot(self):
+    def data3d_cal(self):
+        for i in range(self.X.shape[0]):
+            self.data_reset(mi=self.Modu3D[i])
+            self.vzmax3D[i, :], self.vzmin3D[i, :] = self.vzslimit_cal()
+            for j in range(self.X.shape[1]):
+                self.X[i, j] = self.wt[j]
+                self.Y[i, j] = self.Modu3D[i]
+
+    def data3d_plot(self):
         plt.rcParams["font.family"] = "Times New Roman"  # 设置全局西文字体为 Times New Roman
         plt.rcParams["axes.unicode_minus"] = False       # 解决负号显示为方块的问题
         plt.rcParams['mathtext.fontset'] = 'stix'  # 让数学符号也匹配 Times 风格
@@ -39,10 +39,7 @@ class threephase3D(tpv.ThreePhaseVoltage):
         ax.yaxis.pane.fill = False
         ax.zaxis.pane.fill = False
         # set grid lines to a light gray for better visibility without overpowering the data
-        grid_color = "#C0C0C0"
-        ax.xaxis._axinfo['grid']['color'] = grid_color
-        ax.yaxis._axinfo['grid']['color'] = grid_color
-        ax.zaxis._axinfo['grid']['color'] = grid_color
+        ax.grid(color='#C0C0C0')
         # set the axis lines to a darker gray for better contrast
         ax.xaxis.line.set_color('#666666')
         ax.yaxis.line.set_color('#666666')
@@ -57,20 +54,20 @@ class threephase3D(tpv.ThreePhaseVoltage):
         vmin, vmax = combined_data.min(), combined_data.max()
         
         # ===================== plot two surfaces =====================
-        surf2 = ax.plot_surface(
+        ax.plot_surface(
             self.X, self.Y, self.vzmin3D,
             cmap=cmap, alpha=1.0, vmin=vmin, vmax=vmax,
-            rstride=1, cstride=1,   # 根据数据密度调整
+            rstride=1, cstride=1,
             antialiased=True, edgecolor='none'
-            )
-                
+        )
+
         surf1 = ax.plot_surface(
             self.X, self.Y, self.vzmax3D,
             cmap=cmap, alpha=1.0, vmin=vmin, vmax=vmax,
             rstride=1, cstride=1,   # 根据数据密度调整
             antialiased=True, edgecolor='none'
             )
-        cbar = fig.colorbar(surf1, ax=ax, shrink=0.7, pad=0.05)
+        fig.colorbar(surf1, ax=ax, shrink=0.7, pad=0.05)
 
         # ===================== label fonts =====================
         ax.set_xlabel('Angle (rad)', fontweight='bold')
@@ -87,6 +84,6 @@ class threephase3D(tpv.ThreePhaseVoltage):
         plt.show()
 
 if __name__ == "__main__":
-    ClassTest = threephase3D()
-    ClassTest.data3D_Cal()
-    ClassTest.data3D_plot()
+    class_test = ThreePhase3D()
+    class_test.data3d_cal()
+    class_test.data3d_plot()

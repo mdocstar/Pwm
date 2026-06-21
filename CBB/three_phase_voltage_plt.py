@@ -4,8 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class ThreePhaseVoltage:
-    def __init__(self, modulation_index):
-        self.modulation_index = modulation_index
+    def __init__(self, mi):
+        self.modulation_index = mi
         self.XYlabels = ['Time (s)', 'Voltage (p.u.)']
         self.XYlabels_fontsize = 14
         self.Gridlabels_fontsize = 12
@@ -55,10 +55,10 @@ class ThreePhaseVoltage:
             # bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.7, edgecolor='none')
         )
         
-    def three_voltage_plot(self,Picsize=(7, 4.3)):
+    def three_voltage_plot(self, picsize=(7, 4.3)):
         plt.rcParams["font.family"] = "Times New Roman"  # 设置全局西文字体为 Times New Roman
         plt.rcParams["axes.unicode_minus"] = False        # 解决负号显示为方块的问题
-        fig,ax = plt.subplots(figsize=Picsize, layout='constrained')
+        fig, ax = plt.subplots(figsize=picsize, layout='constrained')
         
         for label in ax.get_xticklabels() + ax.get_yticklabels():
             label.set_fontsize(self.Gridlabels_fontsize)  # 10号字体
@@ -67,7 +67,7 @@ class ThreePhaseVoltage:
         ax.plot(self.angle, self.Va, label='Phase A Voltage', color='r')
         ax.plot(self.angle, self.Vb, label='Phase B Voltage', color='g')
         ax.plot(self.angle, self.Vc, label='Phase C Voltage', color='b')
-        ax.set_title(f'Three-Phase Voltage Waveforms (Modulation Index = {modulation_index})',fontweight='bold')
+        ax.set_title(f'Three-Phase Voltage Waveforms (Modulation Index = {self.modulation_index})', fontweight='bold')
         ax.set_xlabel('Angle (rad)',fontsize = self.XYlabels_fontsize,fontweight='bold')
         ax.set_ylabel('Voltage (p.u.)',fontsize = self.XYlabels_fontsize,fontweight='bold')
         ax.set_xlim(0, self.angle[-1])
@@ -90,6 +90,6 @@ class ThreePhaseVoltage:
         plt.show()
             
 if __name__ == "__main__":
-    modulation_index = 0.85  # Example modulation index
-    ClassThreePhaseVoltage = ThreePhaseVoltage(modulation_index)
-    ClassThreePhaseVoltage.three_voltage_plot()
+    mod_idx = 0.85  # Example modulation index
+    class_three_phase_voltage = ThreePhaseVoltage(mod_idx)
+    class_three_phase_voltage.three_voltage_plot()
