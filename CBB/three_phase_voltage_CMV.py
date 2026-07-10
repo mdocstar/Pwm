@@ -4,8 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class ThreePhaseVoltage:
-    def __init__(self, modulation_index):
-        self.modulation_index = modulation_index
+    def __init__(self, mi):
+        self.modulation_index = mi
 
         self.time = np.linspace(0, 0.02, 10000)  # 50 Hz fundamental frequency
         self.angle = self.time * 2 * np.pi * 50  # Phase angle over time
@@ -32,26 +32,26 @@ class ThreePhaseVoltage:
         self.Va = self.modulation_index * np.sin(2 * np.pi * 50 * self.time + self.start_anlge)
         self.Vb = self.modulation_index * np.sin(2 * np.pi * 50 * self.time - 2 * np.pi / 3 + self.start_anlge)
         self.Vc = self.modulation_index * np.sin(2 * np.pi * 50 * self.time + 2 * np.pi / 3 + self.start_anlge)
-        Vmax = np.maximum(self.Va, np.maximum(self.Vb, self.Vc))
-        Vmin = np.minimum(self.Va, np.minimum(self.Vb, self.Vc))
-        Vmid = self.Va + self.Vb + self.Vc - Vmax - Vmin
-        self.Vzmax = np.minimum(1 - Vmax, -Vmin)
-        self.Vzmin = np.maximum(-1 - Vmin, -Vmax)
-        self.Vzs_SV = -0.5 * (Vmax + Vmin)
-        self.VPOD_max = np.minimum(self.Vzmax,0.5 * Vmax)
-        self.VPOD_min = np.maximum(self.Vzmin,0.5 * Vmin)
-        
+        vmax_arr = np.maximum(self.Va, np.maximum(self.Vb, self.Vc))
+        vmin_arr = np.minimum(self.Va, np.minimum(self.Vb, self.Vc))
+        vmid_arr = self.Va + self.Vb + self.Vc - vmax_arr - vmin_arr
+        self.Vzmax = np.minimum(1 - vmax_arr, -vmin_arr)
+        self.Vzmin = np.maximum(-1 - vmin_arr, -vmax_arr)
+        self.Vzs_SV = -0.5 * (vmax_arr + vmin_arr)
+        self.VPOD_max = np.minimum(self.Vzmax, 0.5 * vmax_arr)
+        self.VPOD_min = np.maximum(self.Vzmin, 0.5 * vmin_arr)
+
         for i in range(len(self.Va)):
-            if (1 + Vmin[i]) <= Vmid[i]:
+            if (1 + vmin_arr[i]) <= vmid_arr[i]:
                 self.VPD_max1[i] = self.Vzmax[i]
-                self.VPD_min1[i] = np.maximum(self.Vzmin[i],-Vmid[i])
+                self.VPD_min1[i] = np.maximum(self.Vzmin[i], -vmid_arr[i])
             else:
                 self.VPD_max1[i] = np.nan
                 self.VPD_min1[i] = np.nan
-                
+
         for i in range(len(self.Va)):
-            if (1 + Vmid[i]) <= Vmax[i]:
-                self.VPD_max2[i] = np.minimum(self.Vzmax[i],-Vmid[i])
+            if (1 + vmid_arr[i]) <= vmax_arr[i]:
+                self.VPD_max2[i] = np.minimum(self.Vzmax[i], -vmid_arr[i])
                 self.VPD_min2[i] = self.Vzmin[i]
             else:
                 self.VPD_max2[i] = np.nan
@@ -64,10 +64,10 @@ class ThreePhaseVoltage:
             vb = self.Vb[i]
             vc = self.Vc[i]
             
-            Vmax = max(va, vb, vc)
-            Vmin = min(va, vb, vc)
-            Vmid = va + vb + vc - Vmax - Vmin  # middle voltage
-            Vmid = -Vmid
+            vmax = max(va, vb, vc)
+            vmin = min(va, vb, vc)
+            vmid = va + vb + vc - vmax - vmin  # middle voltage
+            vmid = -vmid
 
             # 判断符号（核心逻辑和你原来完全一致）
             if np.sign(va) == np.sign(vb):
@@ -77,17 +77,17 @@ class ThreePhaseVoltage:
             else:
                 self.Vzs_ZCD[i] = np.sign(va) - va
             
-            if abs(self.Vzs_ZCD[i]) <= abs(Vmid):
+            if abs(self.Vzs_ZCD[i]) <= abs(vmid):
                 self.Vzs_ZCD[i] = self.Vzs_ZCD[i]
             else:
-                self.Vzs_ZCD[i] = Vmid
+                self.Vzs_ZCD[i] = vmid
 
-    def fig_plot(self,Picsize=(7, 4.2)):
+    def fig_plot(self, picsize=(7, 4.2)):
         plt.rcParams["font.family"] = "Times New Roman"  # set global font to Times New Roman
         plt.rcParams["axes.unicode_minus"] = False       # solve the problem of negative sign display as a square
         plt.rcParams['mathtext.fontset'] = 'stix'  # set math font to match Times style
         
-        fig,ax = plt.subplots(figsize=Picsize, layout='constrained')
+        fig, ax = plt.subplots(figsize=picsize, layout='constrained')
         
         ax.plot(self.angle, self.Vzmax, color='#FFE699',linewidth=2)
         ax.plot(self.angle, self.Vzmin, color='#D3ECB9',linewidth=2)
@@ -122,6 +122,16 @@ class ThreePhaseVoltage:
             self.angle,  # X轴范围
             self.VPD_max1,          # 下方边界（X轴，y=0）
             self.VPD_min1,          # 上方边界（曲线y=sin(x)）
+            where=None,  # 指定填充范围：x在2到6之间
+            color="#666666",          # 填充颜色
+            alpha=0.3,                  # 透明度（避免遮挡曲线）
+            label=None             # 图例标签
+        )
+        
+        ax.fill_between(
+            self.angle,  # X轴范围
+            self.VPD_max2,          # 下方边界（X轴，y=0）
+            self.VPD_min2,          # 上方边界（曲线y=sin(x)）
             where=None,  # 指定填充范围：x在2到6之间
             color="#666666",          # 填充颜色
             alpha=0.3,                  # 透明度（避免遮挡曲线）

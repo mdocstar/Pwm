@@ -4,38 +4,45 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class ThreePhaseVoltage:
-    def __init__(self, modulation_index, fre=50, start_angle=0,time = 0.02):
-        ##### use data_rest to initialize the three-phase voltage parameters
-        self.data_reset(modulation_index, fre, start_angle,time)
+    def __init__(self, mi=0.90, fre=50, start_angle=0, time=0.02):
+        ##### initialize all instance attributes
+        self.modulation_index = None
+        self.wt = None
+        self.start_anlge = None
+        self.Va = None
+        self.Vb = None
+        self.Vc = None
+        ##### use data_reset to initialize the three-phase voltage parameters
+        self.data_reset(mi, fre, start_angle, time)
 
-    def data_reset(self, modulation_index=0.90, fre = 50,start_angle=0,time = 0.02):
+    def data_reset(self, mi=0.90, fre=50, start_angle=0, time=0.02):
         ##### set modulation index limitation 0~2/sqrt(3)
-        modulation_index = max(0,modulation_index)
-        modulation_index = min(2 / np.sqrt(3),modulation_index)
-        self.modulation_index = modulation_index
-        
+        mi = max(0, mi)
+        mi = min(2 / np.sqrt(3), mi)
+        self.modulation_index = mi
+
         ##### set three-phase voltage parameters
         self.wt = np.linspace(0, 2*np.pi*fre*time, 1000)  # 50 Hz fundamental frequency
-        self.start_anlge = start_angle # Starting phase angle
+        self.start_anlge = start_angle  # Starting phase angle
         self.Va = self.modulation_index * np.sin(self.wt + self.start_anlge)
         self.Vb = self.modulation_index * np.sin(self.wt - 2 * np.pi / 3 + self.start_anlge)
         self.Vc = self.modulation_index * np.sin(self.wt + 2 * np.pi / 3 + self.start_anlge)
 
-    def Vzslimit_cal(self):
+    def vzslimit_cal(self):
         ##### calculate zero-sequence voltage limitation
-        umax = np.maximum(self.Va,np.maximum(self.Vb,self.Vc))
-        umin = np.minimum(self.Va,np.minimum(self.Vb,self.Vc))
-        
-        Vzs_max = np.minimum(1 - umax,-umin)
-        Vzs_min = np.maximum(-1 - umin,-umax)
-        return Vzs_max,Vzs_min
-    
-    def data_plot(self,*parameters,Picsize=(7, 4.3)):
+        umax = np.maximum(self.Va, np.maximum(self.Vb, self.Vc))
+        umin = np.minimum(self.Va, np.minimum(self.Vb, self.Vc))
+
+        vzs_max = np.minimum(1 - umax, -umin)
+        vzs_min = np.maximum(-1 - umin, -umax)
+        return vzs_max, vzs_min
+
+    def data_plot(self, *parameters, picsize=(7, 4.3)):
         ##### plot three-phase voltage waveforms
         plt.rcParams["font.family"] = "Times New Roman"  # set global font to Times New Roman
         plt.rcParams["axes.unicode_minus"] = False      # fix negative sign display issue
         plt.rcParams['mathtext.fontset'] = 'stix'
-        fig, ax = plt.subplots(figsize=Picsize)
+        fig, ax = plt.subplots(figsize=picsize)
 
         ##### plot the data waveforms
         for paramter in parameters:
@@ -54,7 +61,7 @@ class ThreePhaseVoltage:
         plt.show()
     
 if __name__ == "__main__":
-    modulation_index = 0.90  # Example modulation index
-    ClassThreePhaseVoltage = ThreePhaseVoltage(modulation_index)
-    Vzs_max,Vzs_min = ClassThreePhaseVoltage.Vzslimit_cal()
-    ClassThreePhaseVoltage.data_plot(ClassThreePhaseVoltage.Va,ClassThreePhaseVoltage.Vb,ClassThreePhaseVoltage.Vc,Vzs_max,Vzs_min)
+    mod_idx = 0.90  # Example modulation index
+    class_three_phase_voltage = ThreePhaseVoltage(mod_idx)
+    result_max, result_min = class_three_phase_voltage.vzslimit_cal()
+    class_three_phase_voltage.data_plot(class_three_phase_voltage.Va, class_three_phase_voltage.Vb, class_three_phase_voltage.Vc, result_max, result_min)
