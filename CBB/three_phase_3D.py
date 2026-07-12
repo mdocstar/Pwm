@@ -57,17 +57,17 @@ class ThreePhase3D(tpv.ThreePhaseVoltage):
         ax.plot_surface(
             self.X, self.Y, self.vzmin3D,
             cmap=cmap, alpha=1.0, vmin=vmin, vmax=vmax,
-            rstride=1, cstride=1,
+            rstride=2, cstride=5,   # 根据数据密度调整
             antialiased=True, edgecolor='none'
         )
 
         surf1 = ax.plot_surface(
             self.X, self.Y, self.vzmax3D,
             cmap=cmap, alpha=1.0, vmin=vmin, vmax=vmax,
-            rstride=1, cstride=1,   # 根据数据密度调整
+            rstride=2, cstride=5,   # 根据数据密度调整
             antialiased=True, edgecolor='none'
             )
-        fig.colorbar(surf1, ax=ax, shrink=0.7, pad=0.05)
+        cbar = fig.colorbar(surf1, ax=ax, shrink=0.7, pad=0.05)
 
         # ===================== label fonts =====================
         ax.set_xlabel('Angle (rad)', fontweight='bold')
