@@ -12,6 +12,8 @@ class ThreePhaseVoltage:
         self.Va = None
         self.Vb = None
         self.Vc = None
+        self.Vzs_SV = None
+        self.Vzs_ZCD = None
         ##### use data_reset to initialize the three-phase voltage parameters
         self.data_reset(mi, fre, start_angle, time)
 
@@ -27,6 +29,8 @@ class ThreePhaseVoltage:
         self.Va = self.modulation_index * np.sin(self.wt + self.start_anlge)
         self.Vb = self.modulation_index * np.sin(self.wt - 2 * np.pi / 3 + self.start_anlge)
         self.Vc = self.modulation_index * np.sin(self.wt + 2 * np.pi / 3 + self.start_anlge)
+        self.Vzs_SV = None
+        self.Vzs_ZCD = None
 
     def vzslimit_cal(self):
         ##### calculate zero-sequence voltage limitation
@@ -36,6 +40,45 @@ class ThreePhaseVoltage:
         vzs_max = np.minimum(1 - umax, -umin)
         vzs_min = np.maximum(-1 - umin, -umax)
         return vzs_max, vzs_min
+
+    def vzs_sv_cal(self):
+        ##### calculate zero-sequence voltage using space vector (SV) method
+        ##### Vzs_SV = -0.5 * (Vmax + Vmin), representing the common-mode
+        ##### voltage injected in standard space-vector PWM
+        vmax_arr = np.maximum(self.Va, np.maximum(self.Vb, self.Vc))
+        vmin_arr = np.minimum(self.Va, np.minimum(self.Vb, self.Vc))
+        self.Vzs_SV = -0.5 * (vmax_arr + vmin_arr)
+        return self.Vzs_SV
+
+    def vzs_zcd_cal(self):
+        ##### calculate zero-sequence voltage using zero-crossing detection (ZCD) method
+        ##### the method determines which two phases share the same sign,
+        ##### then computes the ZCD voltage from the third (odd-one-out) phase
+        ##### and clamps the result to the negated middle voltage (-vmid)
+        n = len(self.Va)
+        self.Vzs_ZCD = np.zeros(n)
+
+        for i in range(n):
+            va = self.Va[i]
+            vb = self.Vb[i]
+            vc = self.Vc[i]
+
+            vmax = max(va, vb, vc)
+            vmin = min(va, vb, vc)
+            vmid = va + vb + vc - vmax - vmin
+            vmid = -vmid
+
+            if np.sign(va) == np.sign(vb):
+                self.Vzs_ZCD[i] = np.sign(vc) - vc
+            elif np.sign(va) == np.sign(vc):
+                self.Vzs_ZCD[i] = np.sign(vb) - vb
+            else:
+                self.Vzs_ZCD[i] = np.sign(va) - va
+
+            if abs(self.Vzs_ZCD[i]) > abs(vmid):
+                self.Vzs_ZCD[i] = vmid
+
+        return self.Vzs_ZCD
 
     def data_plot(self, *parameters, picsize=(7, 4.3)):
         ##### plot three-phase voltage waveforms
