@@ -31,7 +31,7 @@ class ThreePhaseClsOne(tpv.ThreePhaseVoltage):
         ##### calculate zero-sequence voltage limitation using base class method
         self.vzs_max, self.vzs_min = self.vzs_limit_calculate()
 
-    def three_phase_plot(self, pic_size=(7, 4.2)):
+    def three_phase_plot(self, pic_size=(10, 7.0)):
         plt.rcParams["font.family"] = "Times New Roman"  # set global font to Times New Roman
         plt.rcParams["axes.unicode_minus"] = False       # solve negative sign display issue
         plt.rcParams['mathtext.fontset'] = 'stix'        # match math font to Times style
