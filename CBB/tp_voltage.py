@@ -40,6 +40,12 @@ class ThreePhaseVoltage:
         vzs_max = np.minimum(1 - umax, -umin)
         vzs_min = np.maximum(-1 - umin, -umax)
         return vzs_max, vzs_min
+    
+    def v_max_min_calculate(self):
+        ##### calculate the maximum and minimum of the three-phase voltages
+        vmax = np.maximum(self.Va, np.maximum(self.Vb, self.Vc))
+        vmin = np.minimum(self.Va, np.minimum(self.Vb, self.Vc))
+        return vmax, vmin
 
     def vzs_sv_calculate(self):
         ##### calculate zero-sequence voltage using space vector (SV) method

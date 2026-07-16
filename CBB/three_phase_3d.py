@@ -7,15 +7,22 @@ class ThreePhase3D(tpv.ThreePhaseVoltage):
     def __init__(self):
         super().__init__(mi=0.90)
         self.modulation_3d = np.linspace(0, 2 / np.sqrt(3), int(1e3))
-        self.X = np.zeros((len(self.modulation_3d), len(self.wt)))
-        self.Y = np.zeros((len(self.modulation_3d), len(self.wt)))
-        self.vz_max_3d = np.zeros((len(self.modulation_3d), len(self.wt)))
-        self.vz_min_3d = np.zeros((len(self.modulation_3d), len(self.wt)))
+        length_modu = len(self.modulation_3d)
+        length_wt = len(self.wt)
+        self.X = np.zeros((length_modu, length_wt))
+        self.Y = np.zeros((length_modu, length_wt))
+        self.vz_max_3d = np.zeros((length_modu, length_wt))
+        self.vz_min_3d = np.zeros((length_modu, length_wt))
+        self.one_plus_min = np.zeros((length_modu, length_wt))
+        self.one_minus_max = np.zeros((length_modu, length_wt))
 
     def data_3d_calculate(self):
         for i in range(self.X.shape[0]):
             self.data_reset(mi=self.modulation_3d[i])
             self.vz_max_3d[i, :], self.vz_min_3d[i, :] = self.vzs_limit_calculate()
+            self.one_plus_min[i, :], self.one_minus_max[i, :] = self.v_max_min_calculate()
+            self.one_plus_min[i, :]  = 1 + self.one_plus_min[i, :] 
+            self.one_minus_max[i, :] = 1 - self.one_minus_max[i, :]
             for j in range(self.X.shape[1]):
                 self.X[i, j] = self.wt[j]
                 self.Y[i, j] = self.modulation_3d[i]

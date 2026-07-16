@@ -1,6 +1,6 @@
 ####### This file is aimed at plotting the PD-I PWM's low
 ####### common mode voltage area and its proportion
-import CBB.three_phase_3d as tp3d
+from CBB import three_phase_3d as tp3d
 
 class Pd1_cmv(tp3d.ThreePhase3D):
     def __init__(self):
