@@ -2,7 +2,7 @@
 ####### for a given modulation index and phase angle from 0~2 pi.
 import numpy as np
 import matplotlib.pyplot as plt
-import tp_voltage as tpv
+from CBB import tp_voltage as tpv
 
 class ThreePhaseVoltagePlot(tpv.ThreePhaseVoltage):
     def __init__(self, mi):

@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import tp_voltage as tpv
+from CBB import tp_voltage as tpv
 
 class ThreePhaseClsOne(tpv.ThreePhaseVoltage):
     def __init__(self, mi):
