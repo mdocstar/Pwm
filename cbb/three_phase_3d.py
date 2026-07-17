@@ -1,7 +1,11 @@
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from CBB import tp_voltage as tpv
+from cbb import tp_voltage as tpv
 
 class ThreePhase3D(tpv.ThreePhaseVoltage):
     def __init__(self):
@@ -13,6 +17,7 @@ class ThreePhase3D(tpv.ThreePhaseVoltage):
         self.Y = np.zeros((length_modu, length_wt))
         self.vz_max_3d = np.zeros((length_modu, length_wt))
         self.vz_min_3d = np.zeros((length_modu, length_wt))
+        self.v_mid = np.zeros((length_modu, length_wt))
         self.one_plus_min = np.zeros((length_modu, length_wt))
         self.one_minus_max = np.zeros((length_modu, length_wt))
 
@@ -20,14 +25,20 @@ class ThreePhase3D(tpv.ThreePhaseVoltage):
         for i in range(self.X.shape[0]):
             self.data_reset(mi=self.modulation_3d[i])
             self.vz_max_3d[i, :], self.vz_min_3d[i, :] = self.vzs_limit_calculate()
-            self.one_plus_min[i, :], self.one_minus_max[i, :] = self.v_max_min_calculate()
+            self.one_minus_max[i, :], self.one_plus_min[i, :], self.v_mid[i, :] = self.v_max_min_calculate()
             self.one_plus_min[i, :]  = 1 + self.one_plus_min[i, :] 
             self.one_minus_max[i, :] = 1 - self.one_minus_max[i, :]
             for j in range(self.X.shape[1]):
                 self.X[i, j] = self.wt[j]
                 self.Y[i, j] = self.modulation_3d[i]
 
-    def data_3d_plot(self):
+    def data_3d_plot(self,data1 = None, data2 = None):
+        ### set initial data if not provided
+        if data1 is None:
+            data1 = self.vz_max_3d
+        if data2 is None:
+            data2 = self.vz_min_3d
+            
         plt.rcParams["font.family"] = "Times New Roman"  # set global font to Times New Roman
         plt.rcParams["axes.unicode_minus"] = False       # fix negative sign display issue
         plt.rcParams['mathtext.fontset'] = 'stix'  # match math font to Times style
@@ -57,19 +68,19 @@ class ThreePhase3D(tpv.ThreePhaseVoltage):
 
         # ===================== colorbar settings =====================
         cmap = cm.viridis
-        combined_data = np.concatenate([self.vz_max_3d.ravel(), self.vz_min_3d.ravel()])
+        combined_data = np.concatenate([data1.ravel(), data2.ravel()])
         vmin, vmax = combined_data.min(), combined_data.max()
 
         # ===================== plot two surfaces =====================
         ax.plot_surface(
-            self.X, self.Y, self.vz_min_3d,
+            self.X, self.Y, data2,
             cmap=cmap, alpha=1.0, vmin=vmin, vmax=vmax,
             rstride=2, cstride=5,
             antialiased=True, edgecolor='none'
         )
 
         surface = ax.plot_surface(
-            self.X, self.Y, self.vz_max_3d,
+            self.X, self.Y, data1,
             cmap=cmap, alpha=1.0, vmin=vmin, vmax=vmax,
             rstride=2, cstride=5,
             antialiased=True, edgecolor='none'

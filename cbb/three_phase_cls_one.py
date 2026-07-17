@@ -1,6 +1,10 @@
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import numpy as np
 import matplotlib.pyplot as plt
-from CBB import tp_voltage as tpv
+from cbb import tp_voltage as tpv
 
 class ThreePhaseClsOne(tpv.ThreePhaseVoltage):
     def __init__(self, mi):

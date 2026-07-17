@@ -1,5 +1,9 @@
 ####### This file is aimed at plotting the three-phase voltage waveforms
 ####### for a given modulation index and phase angle from 0~2 pi.
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -45,7 +49,8 @@ class ThreePhaseVoltage:
         ##### calculate the maximum and minimum of the three-phase voltages
         vmax = np.maximum(self.Va, np.maximum(self.Vb, self.Vc))
         vmin = np.minimum(self.Va, np.minimum(self.Vb, self.Vc))
-        return vmax, vmin
+        vmid = self.Va + self.Vb + self.Vc - vmax - vmin
+        return vmax, vmin, vmid
 
     def vzs_sv_calculate(self):
         ##### calculate zero-sequence voltage using space vector (SV) method
