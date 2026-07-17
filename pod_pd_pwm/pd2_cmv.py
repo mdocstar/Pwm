@@ -7,14 +7,15 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 from cbb import three_phase_3d as tp3d
 
-class Pd1_cmv(tp3d.ThreePhase3D):
+class Pd2_cmv(tp3d.ThreePhase3D):
     def __init__(self):
         super().__init__()
-        
         length_modu = len(self.modulation_3d)
         length_wt   = len(self.wt)
-        self.vzs_low_cmv_max = np.zeros((length_modu, length_wt))
-        self.vzs_low_cmv_min = np.zeros((length_modu, length_wt))
+        self.vzs_up_low_cmv_max = np.zeros((length_modu, length_wt))
+        self.vzs_up_low_cmv_min = np.zeros((length_modu, length_wt))
+        self.vzs_down_low_cmv_max = np.zeros((length_modu, length_wt))
+        self.vzs_down_low_cmv_min = np.zeros((length_modu, length_wt))
 
     def vzs_low_cmv_calculate(self):
         for i in range(len(self.modulation_3d)):
@@ -40,7 +41,7 @@ class Pd1_cmv(tp3d.ThreePhase3D):
         return  self.vzs_low_cmv_proportion
 
 if __name__ == "__main__":
-    test_instance = Pd1_cmv()
+    test_instance = Pd2_cmv()
     test_instance.data_3d_calculate()
     test_instance.vzs_low_cmv_calculate()
     #test_instance.data_3d_plot(test_instance.vzs_low_cmv_max, test_instance.vzs_low_cmv_min)
