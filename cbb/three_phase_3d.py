@@ -20,8 +20,9 @@ class ThreePhase3D(tpv.ThreePhaseVoltage):
         self.v_mid = np.zeros((length_modu, length_wt))
         self.v_max = np.zeros((length_modu, length_wt))
         self.v_min = np.zeros((length_modu, length_wt))
-        self.one_plus_min = np.zeros((length_modu, length_wt))
+        self.one_plus_min  = np.zeros((length_modu, length_wt))
         self.one_minus_max = np.zeros((length_modu, length_wt))
+        self.vzs_division  = np.zeros((length_modu, length_wt))
 
     def data_3d_calculate(self):
         for i in range(self.X.shape[0]):
@@ -33,6 +34,14 @@ class ThreePhase3D(tpv.ThreePhaseVoltage):
             for j in range(self.X.shape[1]):
                 self.X[i, j] = self.wt[j]
                 self.Y[i, j] = self.modulation_3d[i]
+                
+                if -self.v_mid[i, j] >= self.vz_min_3d[i, j] and -self.v_mid[i, j] <= self.vz_max_3d[i, j]:
+                    self.vzs_division[i, j] = -self.v_mid[i, j]
+                elif self.vz_max_3d[i, j] < -self.v_mid[i, j]:
+                    self.vzs_division[i, j] = self.vz_max_3d[i, j]
+                else:
+                    self.vzs_division[i, j] = self.vz_min_3d[i, j]
+
 
     def data_3d_plot(self,data1 = None, data2 = None):
         ### set initial data if not provided
@@ -76,15 +85,15 @@ class ThreePhase3D(tpv.ThreePhaseVoltage):
         # ===================== plot two surfaces =====================
         ax.plot_surface(
             self.X, self.Y, data2,
-            cmap=cmap, alpha=1.0, vmin=vmin, vmax=vmax,
-            rstride=2, cstride=5,
+            cmap=cmap, alpha=0.6, vmin=vmin, vmax=vmax,
+            rstride=2, cstride=2,
             antialiased=True, edgecolor='none'
         )
 
         surface = ax.plot_surface(
             self.X, self.Y, data1,
-            cmap=cmap, alpha=1.0, vmin=vmin, vmax=vmax,
-            rstride=2, cstride=5,
+            cmap=cmap, alpha=0.6, vmin=vmin, vmax=vmax,
+            rstride=2, cstride=2,
             antialiased=True, edgecolor='none'
             )
         cbar = fig.colorbar(surface, ax=ax, shrink=0.7, pad=0.05)

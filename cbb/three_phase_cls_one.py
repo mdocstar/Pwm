@@ -11,7 +11,7 @@ class ThreePhaseClsOne(tpv.ThreePhaseVoltage):
         super().__init__(mi=1.15)
 
         ##### override: ClsOne only covers one sector (0 ~ 2*pi/3)
-        self.wt = np.linspace(0, 2 * np.pi / 3, 10000)
+        self.wt = np.linspace(0, 2 * np.pi / 3, 1000)
 
         ##### calculate three-phase voltage according to voltage max/mid/min division
         self.umax = self.modulation_index * np.sin(self.wt + np.pi / 6)

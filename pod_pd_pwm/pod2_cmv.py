@@ -51,6 +51,7 @@ class Pd2_cmv(tp3d.ThreePhase3D):
                     up_low_cmv_volume += self.vzs_up_low_cmv_max[i,j] - self.vzs_up_low_cmv_min[i,j]
                 if not np.isnan(self.vzs_down_low_cmv_max[i,j]) and not np.isnan(self.vzs_down_low_cmv_min[i,j]):
                     down_low_cmv_volume += self.vzs_down_low_cmv_max[i,j] - self.vzs_down_low_cmv_min[i,j]
+                # calculate the total volume of 3D data    
                 data_3d_volume += self.vz_max_3d[i,j] - self.vz_min_3d[i,j]
 
         vzs_up_low_cmv_proportion   = (up_low_cmv_volume ) * 100 / data_3d_volume if data_3d_volume != 0 else 0
