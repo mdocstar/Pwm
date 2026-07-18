@@ -8,7 +8,7 @@ from cbb import tp_voltage as tpv
 
 class ThreePhaseClsOne(tpv.ThreePhaseVoltage):
     def __init__(self, mi):
-        super().__init__(mi=mi)
+        super().__init__(mi=1.15)
 
         ##### override: ClsOne only covers one sector (0 ~ 2*pi/3)
         self.wt = np.linspace(0, 2 * np.pi / 3, 10000)
