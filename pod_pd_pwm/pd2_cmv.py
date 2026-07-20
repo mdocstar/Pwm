@@ -43,6 +43,8 @@ class Pd2_cmv(tp3d.ThreePhase3D):
 
     def data_porportion_calculate(self):
         data_3d_volume = 0
+        data_3d_up_volume = 0
+        data_3d_down_volume = 0
         up_low_cmv_volume = 0
         down_low_cmv_volume = 0
         for i in range(len(self.modulation_3d)):
@@ -52,18 +54,24 @@ class Pd2_cmv(tp3d.ThreePhase3D):
                 if not np.isnan(self.vzs_down_low_cmv_max[i,j]) and not np.isnan(self.vzs_down_low_cmv_min[i,j]):
                     down_low_cmv_volume += self.vzs_down_low_cmv_max[i,j] - self.vzs_down_low_cmv_min[i,j]
                 data_3d_volume += self.vz_max_3d[i,j] - self.vz_min_3d[i,j]
+                data_3d_up_volume += self.vz_max_3d[i,j] - self.vzs_division[i,j]
+                data_3d_down_volume += self.vzs_division[i,j] - self.vz_min_3d[i,j]
 
         vzs_up_low_cmv_proportion   = (up_low_cmv_volume ) * 100 / data_3d_volume if data_3d_volume != 0 else 0
         vzs_down_low_cmv_proportion = (down_low_cmv_volume) * 100 / data_3d_volume if data_3d_volume != 0 else 0
         vzs_low_cmv_proportion      = (up_low_cmv_volume + down_low_cmv_volume) * 100 / data_3d_volume if data_3d_volume != 0 else 0
-        return  vzs_up_low_cmv_proportion, vzs_down_low_cmv_proportion, vzs_low_cmv_proportion
+        vzs_low_cmv_in_up_proportion       = (up_low_cmv_volume) * 100 / data_3d_up_volume if data_3d_up_volume != 0 else 0
+        vzs_low_cmv_in_down_proportion     = (down_low_cmv_volume) * 100 / data_3d_down_volume if data_3d_down_volume != 0 else 0
+        return  vzs_up_low_cmv_proportion, vzs_down_low_cmv_proportion, vzs_low_cmv_proportion, vzs_low_cmv_in_up_proportion, vzs_low_cmv_in_down_proportion
 
 if __name__ == "__main__":
     test_instance = Pd2_cmv()
     test_instance.data_3d_calculate()
     test_instance.vzs_low_cmv_calculate()
     #test_instance.data_3d_plot(test_instance.vzs_low_cmv_max, test_instance.vzs_low_cmv_min)
-    vzs_up_low_cmv_proportion, vzs_down_low_cmv_proportion, vzs_low_cmv_proportion = test_instance.data_porportion_calculate()
-    print(f"{vzs_up_low_cmv_proportion:.2f}%")
-    print(f"{vzs_down_low_cmv_proportion:.2f}%")
-    print(f"{vzs_low_cmv_proportion:.2f}%")
+    vzs_up_low_cmv_proportion, vzs_down_low_cmv_proportion, vzs_low_cmv_proportion, vzs_low_cmv_in_up_proportion, vzs_low_cmv_in_down_proportion = test_instance.data_porportion_calculate()
+    print(f"Low Common Mode Voltage in Total Area (Vzs > -Vmid): {vzs_up_low_cmv_proportion:.2f}%")
+    print(f"Low Common Mode Voltage in Total Area (Vzs < -Vmid): {vzs_down_low_cmv_proportion:.2f}%")
+    print(f"Low Common Mode Voltage in Total Area: {vzs_low_cmv_proportion:.2f}%")
+    print(f"Low Common Mode Voltage in Upper Area: {vzs_low_cmv_in_up_proportion:.2f}%")
+    print(f"Low Common Mode Voltage in Lower Area: {vzs_low_cmv_in_down_proportion:.2f}%")
