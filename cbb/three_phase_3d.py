@@ -52,7 +52,7 @@ class ThreePhase3D(tpv.ThreePhaseVoltage):
             
         plt.rcParams["font.family"] = "Times New Roman"  # set global font to Times New Roman
         plt.rcParams["axes.unicode_minus"] = False       # fix negative sign display issue
-        plt.rcParams['mathtext.fontset'] = 'stix'  # match math font to Times style
+        plt.rcParams['mathtext.fontset'] = 'stix'        # match math font to Times style
 
         fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
         plt.subplots_adjust(left=0.05, right=0.95, top=0.98, bottom=0.02)  # cut some white space around the plot
