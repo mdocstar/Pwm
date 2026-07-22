@@ -16,12 +16,30 @@ class PdPodCmv(tp3d.ThreePhase3D):
         self.vzs_up_min   = np.zeros((length_modu, length_wt))
         self.vzs_down_max = np.zeros((length_modu, length_wt))
         self.vzs_down_min = np.zeros((length_modu, length_wt))
+        self.cmv_in_modu = np.zeros(length_modu)
+        self.up_cmv_in_modu = np.zeros(length_modu)
+        self.down_cmv_in_modu = np.zeros(length_modu)
 
     def vzs_calculate(self):
         """Override this method in subclasses to implement specific logic."""
         raise NotImplementedError(
             "Subclasses must implement vzs_calculate"
         )
+        
+    def cmv_proportion_modu(self):
+        for i in range(len(self.modulation_3d)):
+            modu_data = 0
+            up_data   = 0
+            down_data  = 0
+            for j in range(len(self.wt)):
+                modu_data += self.vz_max_3d[i,j] - self.vz_min_3d[i,j]
+                up_data   += self.vzs_up_max[i,j] - self.vzs_up_min[i,j]
+                down_data += self.vzs_down_max[i,j] - self.vzs_down_min[i,j]
+            ### calculate low-cmv area with modulation
+            self.cmv_in_modu[i] = (up_data + down_data) * 100 / modu_data if modu_data != 0 else 0
+            self.up_cmv_in_modu[i] = (up_data ) * 100 / modu_data if modu_data != 0 else 0
+            self.down_cmv_in_modu[i] = (down_data) * 100 / modu_data if modu_data != 0 else 0
+            
 
     def data_porportion_calculate(self):
         data_3d_volume      = 0
