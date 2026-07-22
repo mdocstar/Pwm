@@ -174,7 +174,7 @@ class PdPod3D:
                                      down_color)
 
             # 4. Division surface — separates upper / lower regions
-            self._plot_division(ax, inst.X, inst.Y, inst.vzs_division)
+            # self._plot_division(ax, inst.X, inst.Y, inst.vzs_division)
 
             self._style_3d_ax(ax, title)
 
