@@ -41,6 +41,7 @@ class PdPodmodu:
             for label, inst in self.variants.items():
                 ax.plot(inst.modulation_3d, getattr(inst, data_key),
                         color=colors[label], linewidth=1.2, label=label)
+                
             ax.set_title(ylabel, fontweight='bold', fontsize=12)
             ax.set_xlabel('Modulation Index', fontweight='bold', fontsize=11)
             ax.set_ylabel(ylabel, fontweight='bold', fontsize=11)

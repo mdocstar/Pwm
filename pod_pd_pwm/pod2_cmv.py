@@ -37,6 +37,8 @@ if __name__ == "__main__":
     test_instance = Pod2_cmv()
     test_instance.data_3d_calculate()
     test_instance.vzs_calculate()
+    test_instance.cmv_proportion_modu()
+    test_instance.cmv_modu_plot()
     #test_instance.data_3d_plot(test_instance.vzs_max, test_instance.vzs_min)
     vzs_up_proportion, vzs_down_proportion, vzs_proportion, vzs_in_up_proportion, vzs_in_down_proportion = test_instance.data_porportion_calculate()
     print(f"Low Common Mode Voltage in Total Area (Vzs > -Vmid): {vzs_up_proportion:.2f}%")
@@ -44,3 +46,8 @@ if __name__ == "__main__":
     print(f"Low Common Mode Voltage in Total Area: {vzs_proportion:.2f}%")
     print(f"Low Common Mode Voltage in Upper Area: {vzs_in_up_proportion:.2f}%")
     print(f"Low Common Mode Voltage in Lower Area: {vzs_in_down_proportion:.2f}%")
+
+    print(np.isnan(test_instance.cmv_in_modu))
+    print(np.isnan(test_instance.up_cmv_in_modu))
+    print(np.isnan(test_instance.down_cmv_in_modu))
+
