@@ -2,12 +2,11 @@
 ####### calculation. Other files only need to override vzs_calculate.
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 import numpy as np
 import matplotlib.pyplot as plt
-from cbb import three_phase_3d as tp3d
-
+from python_pwm.cbb import three_phase_3d as tp3d
 class PdPodCmv(tp3d.ThreePhase3D):
     def __init__(self):
         super().__init__()

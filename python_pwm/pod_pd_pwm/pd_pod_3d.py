@@ -7,17 +7,16 @@
 
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
-from pod_pd_pwm.pd1_cmv  import Pd1_cmv
-from pod_pd_pwm.pd2_cmv  import Pd2_cmv
-from pod_pd_pwm.pod1_cmv import Pod1_cmv
-from pod_pd_pwm.pod2_cmv import Pod2_cmv
-
+from python_pwm.pod_pd_pwm.pd1_cmv  import Pd1_cmv
+from python_pwm.pod_pd_pwm.pd2_cmv  import Pd2_cmv
+from python_pwm.pod_pd_pwm.pod1_cmv import Pod1_cmv
+from python_pwm.pod_pd_pwm.pod2_cmv import Pod2_cmv
 
 class PdPod3D:
     """Hold the four PWM variants and produce the summary 2×2 plot."""

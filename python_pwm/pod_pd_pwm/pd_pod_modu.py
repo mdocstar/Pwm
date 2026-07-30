@@ -1,13 +1,12 @@
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 import matplotlib.pyplot as plt
-
-from pod_pd_pwm.pd1_cmv  import Pd1_cmv
-from pod_pd_pwm.pd2_cmv  import Pd2_cmv
-from pod_pd_pwm.pod1_cmv import Pod1_cmv
-from pod_pd_pwm.pod2_cmv import Pod2_cmv
+from python_pwm.pod_pd_pwm.pd1_cmv  import Pd1_cmv
+from python_pwm.pod_pd_pwm.pd2_cmv  import Pd2_cmv
+from python_pwm.pod_pd_pwm.pod1_cmv import Pod1_cmv
+from python_pwm.pod_pd_pwm.pod2_cmv import Pod2_cmv
 
 class PdPodmodu:
     def __init__(self):
@@ -22,7 +21,7 @@ class PdPodmodu:
             inst.vzs_calculate()
             inst.cmv_proportion_modu()
         
-    def data_2d_plot(self, pic_size=(18, 5.5)):
+    def data_2d_plot(self, pic_size=(10, 6.0)):
         plt.rcParams["font.family"] = "Times New Roman"  # set global font to Times New Roman
         plt.rcParams["axes.unicode_minus"] = False       # solve negative sign display issue
         plt.rcParams['mathtext.fontset'] = 'stix'        # match math font to Times style
@@ -47,7 +46,7 @@ class PdPodmodu:
             ax.set_ylabel(ylabel, fontweight='bold', fontsize=11)
             ax.set_xlim(0, inst.modulation_3d[-1])
             ax.legend(loc='best', fontsize=9)
-            ax.grid(linestyle='--', alpha=0.3)
+            ax.grid(linestyle='--', alpha=0.3,color='#7F7F7F')
             ax.tick_params(labelsize=10)
 
         fig.suptitle('Low Common-Mode Voltage Area Proportion vs. Modulation Index',

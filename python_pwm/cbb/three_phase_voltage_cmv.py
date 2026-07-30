@@ -2,11 +2,11 @@
 ####### for a given modulation index and phase angle from 0~2 pi.
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 import numpy as np
 import matplotlib.pyplot as plt
-from cbb import tp_voltage as tpv
+from python_pwm.cbb import tp_voltage as tpv
 
 class ThreePhaseVoltageCMV(tpv.ThreePhaseVoltage):
     def __init__(self, mi):
@@ -90,7 +90,7 @@ class ThreePhaseVoltageCMV(tpv.ThreePhaseVoltage):
         ax.set_ylabel('zero-sequence Voltage (p.u.)', fontsize=14, fontweight='bold')
         ax.tick_params(axis='y', labelsize=14)
         ax.set_xlim(0, self.angle[-1])
-        ax.grid(linestyle='--', alpha=0.3)
+        ax.grid(linestyle='--', alpha=0.3,color='#7F7F7F')
 
         xticks = [0, np.pi/2, np.pi, 3*np.pi/2, 2*np.pi]
         xtick_labels = [r'$0$', r'$\pi/2$', r'$\pi$', r'$3\pi/2$', r'$2\pi$']

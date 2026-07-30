@@ -2,10 +2,10 @@
 ####### common mode voltage area and its proportion
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 import numpy as np
-from pod_pd_pwm.pd_pod_cmv import PdPodCmv
+from python_pwm.pod_pd_pwm.pd_pod_cmv import PdPodCmv
 
 
 class Pod1_cmv(PdPodCmv):

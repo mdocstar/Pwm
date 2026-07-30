@@ -1,10 +1,10 @@
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 import numpy as np
 import matplotlib.pyplot as plt
-from cbb import tp_voltage as tpv
+from python_pwm.cbb import tp_voltage as tpv
 
 class ThreePhaseClsOne(tpv.ThreePhaseVoltage):
     def __init__(self, mi):
@@ -57,7 +57,7 @@ class ThreePhaseClsOne(tpv.ThreePhaseVoltage):
         ax.set_xticks(xticks)
         ax.set_xticklabels(xtick_labels, fontsize=12, fontweight='bold')
         ax.legend(loc='upper right', fontsize=8)
-        ax.grid(linestyle='--', alpha=0.3)
+        ax.grid(linestyle='--', alpha=0.3,color='#7F7F7F')
 
         plt.show()
 
