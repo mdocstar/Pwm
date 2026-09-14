@@ -14,7 +14,6 @@ from python_pwm.pod_pd_pwm.pd2_cmv  import Pd2_cmv
 from python_pwm.pod_pd_pwm.pod1_cmv import Pod1_cmv
 from python_pwm.pod_pd_pwm.pod2_cmv import Pod2_cmv
 
-
 class PodPdModuSlice:
     def __init__(self):
         self.variants = {

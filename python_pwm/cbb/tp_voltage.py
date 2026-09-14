@@ -6,7 +6,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 
 import numpy as np
 import matplotlib.pyplot as plt
-
 class ThreePhaseVoltage:
     def __init__(self, mi=0.90, frequency=50, start_angle=0, time=0.02):
         ##### initialize all instance attributes
