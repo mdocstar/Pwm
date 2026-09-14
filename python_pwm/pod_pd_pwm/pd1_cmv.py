@@ -10,15 +10,10 @@ class Pd1_cmv(PdPodCmv):
     def vzs_calculate(self):
         for i in range(len(self.modulation_3d)):
             for j in range(len(self.wt)):
-                ### pd1's vzs_max is equivalent to other files' vzs_down_max
-                if self.one_plus_min[i,j] <= self.v_mid[i,j] and self.vz_max_3d[i,j] >= np.maximum(-self.v_mid[i,j], self.vz_min_3d[i,j]):
-                    self.vzs_up_max[i,j] = self.vz_max_3d[i,j]
-                    self.vzs_up_min[i,j] = np.maximum(-self.v_mid[i,j], self.vz_min_3d[i,j])
-                else:
-                    self.vzs_up_max[i,j] = np.nan
-                    self.vzs_up_min[i,j] = np.nan
-
-                ### up region is not used by pd1 — set to vz_max_3d so up volume = 0
+                ### in pd1 only DPWM can eliminate the low-CMV area, so the up region is set to vz_min_3d
+                self.vzs_up_max[i,j] = self.vz_min_3d[i,j]
+                self.vzs_up_min[i,j] = self.vz_min_3d[i,j]
+                ### in pd1 only DPWM can eliminate the low-CMV area, so the down region is set to vz_max_3d
                 self.vzs_down_max[i,j] = self.vz_max_3d[i,j]
                 self.vzs_down_min[i,j] = self.vz_max_3d[i,j]
 
